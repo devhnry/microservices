@@ -121,7 +121,7 @@
 				<version>3.4.2</version>
 				<configuration>
 					<to>
-						<image>devhnry/${project.artifactId}:v2</image>
+						<image>devhnry/${project.artifactId}:v3</image>
 					</to>
 				</configuration>
 			</plugin>
