@@ -9,16 +9,15 @@ spring:
       - "default"
   datasource:
     username: root
-    password: ''
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-  h2:
-    console:
-      enabled: true
+    password: 'root'
+    url: jdbc:mysql://localhost:3306/accountsdb
   jpa:
     show-sql: true
-    hibernate:
-      ddl-auto: update
+  sql:
+    init:
+      mode: always
+  config:
+    import: "optional:configserver:http://localhost:8071"
 
 management:
   endpoints:
