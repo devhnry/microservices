@@ -2,7 +2,7 @@ services:
   accountsdb:
     container_name: accountsdb
     ports:
-      - 3308:3306
+      - 3306:3306
     environment:
       MYSQL_DATABASE: accountsdb
     extends:
@@ -31,13 +31,10 @@ services:
       service: microservice-db-config
 
   configserver:
-    image: "devhnry/configserver:v3"
+    image: "devhnry/configserver:v2"
     container_name: configserver-ms
     ports:
       - "8071:8071"
-    depends_on:
-      rabbit:
-        condition: service_healthy
     healthcheck:
       test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
       interval: 10s
@@ -49,24 +46,25 @@ services:
       service: microservice-base-config
 
   accounts:
-    image: "devhnry/accounts:v3"
+    image: "devhnry/accounts:v2"
     container_name: accounts-ms
     ports:
       - "8080:8080"
     depends_on:
-      accountsdb:
-        condition: service_healthy
       configserver:
+        condition: service_healthy
+      accountsdb:
         condition: service_healthy
 
     environment:
       SPRING_APPLICATION_NAME: "accounts"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://accountsdb:3306/accountsdb"
     extends:
       file: common-config.yml
       service: microservice-configserver-config
 
   loans:
-    image: "devhnry/loans:v3"
+    image: "devhnry/loans:v2"
     container_name: loans-ms
     ports:
       - "8090:8090"
@@ -83,7 +81,7 @@ services:
       service: microservice-configserver-config
 
   cards:
-    image: "devhnry/cards:v3"
+    image: "devhnry/cards:v2"
     container_name: cards-ms
     ports:
       - "9000:9000"
